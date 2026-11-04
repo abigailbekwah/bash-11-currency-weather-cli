@@ -10,9 +10,12 @@ if [[ -z "$AMOUNT" || -z "$FROM_RAW" || -z "$TO_RAW" ]]; then
     echo "Example: $0 250 usd xaf" >&2
     exit 1
 fi
- 
+ # FIX 1: Convert raw inputs to uppercase variables
+    FROM="${FROM_RAW^^}"
+    TO="${TO_RAW^^}"
+
 # 3. Validate currency codes: Must be exactly 3 uppercase letters
-if ! [[ "$FROM" =~ ^[A-Z]{2}$ ]] || ! [[ "$TO" =~ ^[A-Z]{3}$ ]]; then
+if ! [[ "$FROM" =~ ^[A-Z]{3}$ ]] || ! [[ "$TO" =~ ^[A-Z]{3}$ ]]; then
     echo "Error: Currency codes must be exactly 3 letters (e.g., USD, EUR, XAF)." >&2
     exit 2
 fi
@@ -39,3 +42,16 @@ if [[ "$API_RESULT" != "success" ]]; then
     echo "Error: Invalid base currency '${FROM}' or API service error." >&2
     exit 2
 fi
+
+# FIX 3: Extract the target currency rate using jq
+RATE=$(echo "$RESPONSE" | jq -r ".rates.${TO} // empty")
+if [[ -z "$RATE" || "$RATE" == "null" ]]; then
+    echo "Error: Target currency '${TO}' not found in exchange rates." >&2
+    exit 2
+fi
+
+# Calculate total with 2 decimal places using awk
+TOTAL=$(awk "BEGIN {printf \"%.2f\", $AMOUNT * $RATE}")
+
+# Display the after formatting result
+echo "${AMOUNT} ${FROM} = ${TOTAL} ${TO}   (rate ${RATE})"
