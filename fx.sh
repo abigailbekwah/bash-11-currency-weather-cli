@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Source the shared helper library
+source "$(dirname "$0")/lib.sh"
+
 #Let's read the arguments in their positions
 AMOUNT="$1"
 FROM_RAW="$2"
@@ -28,7 +31,7 @@ fi
 
 # 1. Fetch live exchange rates from the API
 API_URL="https://open.er-api.com/v6/latest/${FROM}"
-RESPONSE=$(curl -s "$API_URL")
+RESPONSE=$(curl -fsS --max-time 10 "$API_URL")
 
 # Check if curl failed or returned nothing
 if [[ $? -ne 0 || -z "$RESPONSE" ]]; then

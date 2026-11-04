@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 
+#Source the shared helper library
+source "$(dirname "$0")/lib.sh"
+
 # 1. Determine the city: argument $1 if not METEO_CITY default to "Yaounde"
 CITY="${1:-${METEO_CITY:-Yaounde}}"
 
 # 2. Fetch JSON weather data from wttr.in (replacing spaces with '+' for URL compatibility)
 URL="https://wttr.in/${CITY// /+}?format=j1"
-RESPONSE=$(curl -s "$URL")
+RESPONSE=$(curl -fsS --max-time 10 "$URL")
 
 if [[ $? -ne 0 || -z "$RESPONSE" ]]; then
     echo "Error: Failed to connect to weather service." >&2
