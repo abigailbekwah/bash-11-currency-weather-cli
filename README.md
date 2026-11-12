@@ -8,7 +8,7 @@ Freelancers in Cameroon get paid in dollars and euros, and plan their day around
 
 ## 📌 Project Goals​
 
-- Modular Architecture: Extracting shared utility logic into a standalone library (lib.sh) to eliminate code repetition across multiple CLI tools (fx.sh and meteo.sh).
+- Modular Architecture: Extracting shared utility logic into a standalone library (lib.sh) to eliminate code repetition across multiple Command-Line tools (fx.sh and meteo.sh).
 
 - Hardened Error Handling: Standardizing process exits and user feedback via a central die() helper function to return proper exit status codes (1 for system/network failures, 2 for invalid inputs).
 
