@@ -30,7 +30,7 @@ Git & GitHu
 
 ## screenshotlanguage: Bash (#!/usr/bin/env bash)
 
-![bash script] !![alt text]
+![alt text](<asset/images/Screenshot From 2026-11-12 09-23-11.png>)
 
 ## Features
 
