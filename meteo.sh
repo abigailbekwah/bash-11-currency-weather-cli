@@ -12,16 +12,19 @@ URL="https://wttr.in/${CITY// /+}?format=j1"
 RESPONSE=$(safe_curl "$URL")
 
 # 3. Extract temperature, description, and humidity using jq
-TEMP=$(echo "$RESPONSE" | jq -r '.current_condition[0].temp_C // empty')
-DESC=$(echo "$RESPONSE" | jq -r '.current_condition[0].weatherDesc[0].value // empty')
+TEMP_C=$(echo "$RESPONSE" | jq -r '.current_condition[0].temp_C // empty')
+DESCRIPTION=$(echo "$RESPONSE" | jq -r '.current_condition[0].weatherDesc[0].value // empty')
 HUMIDITY=$(echo "$RESPONSE" | jq -r '.current_condition[0].humidity // empty')
 
 if [[ -z "$TEMP" || -z "$DESC" || -z "$HUMIDITY" ]]; then
-    die "Could not parse weather data for '${CITY}'." 2
+    die "Could not retrive weather data for '${CITY}'.please check the city name or network connection" 2
 fi
 
 # 4. Display the weather report
-echo "Weather in ${CITY}:"
-echo "Temperature: ${TEMP}°C"
-echo "Condition:   ${DESC}"
-echo "Humidity:    ${HUMIDITY}%"
+echo "========================================"
+echo "Weather report for ${CITY}:"
+echo "========================================"
+echo "Temperature  :${TEMP_C}°C"
+echo "Condition    :${DESCRIPTION}"
+echo "Humidity     :${HUMIDITY}%"
+echo "========================================"

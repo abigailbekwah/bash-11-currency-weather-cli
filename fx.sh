@@ -5,17 +5,17 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/lib.sh"
 
 #Let's include validation 
-if [ "$#" -lt 2 ]; then
-    die "Usage: fx.sh <AMOUNT> <FROM_CURRENCY> <TO_CURRENCY>" 1
-fi
 
+if [ "$#" -ne 3 ]; then
+    die "Usage: $0 <AMOUNT> <FROM_CURRENCY> <TO_CURRENCY>" 2
+fi
 #Let's read the arguments in their positions
 AMOUNT="$1"
 FROM_RAW="$2"
 TO_RAW="$3"
 
 if [[ -z "$AMOUNT" || -z "$FROM_RAW" || -z "$TO_RAW" ]]; then 
-    die "Usage: $0 AMOUNT FROM TO (Example: $0 250 usd xaf)" 1
+    die "Usage: $0 <AMOUNT> <FROM_CURRENCY> <TO_CURRENCY>" 2
 fi
  # FIX 1: Convert raw inputs to uppercase variables
     FROM="${FROM_RAW^^}"
@@ -42,7 +42,7 @@ if [[ "$API_RESULT" != "success" ]]; then
 fi
 
 # FIX 2: Extract the target currency rate using jq
-RATE=$(echo "$RESPONSE" | jq -r ".rates.${TO} // empty")
+RATE=$(echo "$RESPONSE" | jq -r --arg currency "$TO" '.rates[$currency] // empty')
 if [[ -z "$RATE" || "$RATE" == "null" ]]; then
     die "Target currency '${TO}' not found in exchange rates." 2
 fi
