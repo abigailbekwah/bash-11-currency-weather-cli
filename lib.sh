@@ -17,11 +17,11 @@ safe_curl() {
     curl_exit=$?
 
     if [ $curl_exit -ne 0 ]; then
-        die "Failed to connect to endpoint (curl exit code: $curl_exit)" 2
+        die "Failed to connect to endpoint (curl exit code: $curl_exit)" 1
     fi
     
     if [ -z "$response" ]; then
-        die "Received empty response from server." 3
+        die "Received empty response from server." 1
     fi
 
     echo "$response"

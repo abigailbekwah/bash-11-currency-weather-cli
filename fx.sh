@@ -53,11 +53,14 @@ if [[ "$API_RESULT" != "success" ]]; then
     die "Invalid base currency '${FROM}' or API service error." 2
 fi
 
-# FIX 2: Extract the target currency rate using jq
-RATE=$(echo "$RESPONSE" | jq -r --arg currency "$TO" '.rates[$currency] // empty')
-if [[ -z "$RATE" || "$RATE" == "null" ]]; then
-    die "Target currency '${TO}' not found in exchange rates." 2
+# Validate that the target currency rate exists and is a positive number
+if ! echo "$RESPONSE" | jq -e --arg currency "$TO" \
+    '.rates[$currency] | (type == "number" and . > 0)' >/dev/null 2>&1; then
+    die "Invalid or missing exchange rate for '${TO}'." 3
 fi
+
+# Extract the validated exchange rate
+RATE=$(echo "$RESPONSE" | jq -r --arg currency "$TO" '.rates[$currency]')
 
 # Calculate total with 2 decimal places using awk
 TOTAL=$(awk "BEGIN {printf \"%.2f\", $AMOUNT * $RATE}")
