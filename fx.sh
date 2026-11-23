@@ -3,6 +3,13 @@
 # Source the shared helper library
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/lib.sh"
+# Check required dependencies
+if ! command -v jq >/dev/null 2>&1; then
+    die "Error: jq is required but not installed." 2
+fi
+if ! command -v awk >/dev/null 2>&1; then
+    die "Error: awk is required but not installed." 2
+fi
 
 #Let's include validation 
 
@@ -34,6 +41,11 @@ fi
 # 1. Fetch live exchange rates from the API
 API_URL="https://open.er-api.com/v6/latest/${FROM}"
 RESPONSE=$(safe_curl "$API_URL")
+# Validate that the API response contains valid JSON
+if ! echo "$RESPONSE" | jq empty 2>/dev/null; then
+    die "Invalid JSON response received from API." 3
+fi
+
 
 # Check if API returned a success status
 API_RESULT=$(echo "$RESPONSE" | jq -r ".result // empty")
