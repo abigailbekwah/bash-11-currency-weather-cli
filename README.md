@@ -51,13 +51,13 @@ This project provides two Bash command-line tools to address these needs.
 - jq
 - awk
 
-Make the Scripts Executabl
+Make the Scripts Executable
 
 - chmod +x fx.sh meteo.sh lib.sh
 
 clone the repositor
 
-git clone https://github.com/abigailbekwah/bash-11-currency-weather-cli.git
+git clone [https://github.com/abigailbekwah/bash-11-currency-weather-cli.git]
 
 cd bash-11-currency-weather-cli
 

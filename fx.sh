@@ -25,8 +25,8 @@ if [[ -z "$AMOUNT" || -z "$FROM_RAW" || -z "$TO_RAW" ]]; then
     die "Usage: $0 <AMOUNT> <FROM_CURRENCY> <TO_CURRENCY>" 2
 fi
 # Normalize currency codes to uppercase
-    FROM="${FROM_RAW^^}"
-    TO="${TO_RAW^^}"
+FROM="${FROM_RAW^^}"
+TO="${TO_RAW^^}"
 
 # Validate that both currency codes contain exactly three uppercase letters
 if ! [[ "$FROM" =~ ^[A-Z]{3}$ ]] || ! [[ "$TO" =~ ^[A-Z]{3}$ ]]; then
